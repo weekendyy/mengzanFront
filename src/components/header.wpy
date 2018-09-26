@@ -1,0 +1,102 @@
+<template>
+  <view class="header {{showHeader?'showheader':''}}" >
+    <image wx:if="{{type == 'inner'}}" src="../images/left.png" mode="widthFix" class="backIcon" @tap="backPage"></image>
+    <image wx:if="{{type != 'inner'}}" src="./images/cloud3.png" mode="widthFix" class="cloudIcon1"></image>
+    <image wx:if="{{type != 'inner'}}" src="./images/cloud1.png" mode="widthFix" class="cloudIcon2"></image>
+    <text class="headTxt ellip-1">{{headTxt}}</text>
+  </view>
+  <view style="height: 118rpx"></view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class Header extends wepy.component {
+    props = {
+      headTxt: String,
+      type: String
+    }
+    computed = {
+    }
+    data = {
+      bannerBgIdx:0,
+      showHeader: false
+    }
+    components = {
+      
+    }
+    methods = {
+      backPage(){
+        wx.navigateBack({
+          delta: 1
+        })
+      }
+    }
+    onLoad(){
+      setTimeout(()=>{
+        this.showHeader = true
+        this.$apply()
+      },200)
+    }
+  }
+</script>
+<style lang="less">
+  .header{
+    width: 100%;
+    height: 120rpx;
+    background: linear-gradient(to left, #0D8174,#4CB0A6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    .backIcon{
+      width: 40rpx;
+      height: 40rpx;
+      position: absolute;
+      left: 0;
+      top: 15rpx;
+      padding: 50rpx 40rpx 15rpx 20rpx;
+    }
+    .cloudIcon1{
+      width: 70rpx;
+      height: 40rpx;
+      position: absolute;
+      top: 40rpx;
+      left: 60rpx;
+      animation: cloudMove 50s linear 15s infinite;
+    }
+    .cloudIcon2{
+      width: 150rpx;
+      height: 80rpx;
+      position: absolute;
+      top: -15rpx;
+      left: 150rpx;
+      animation: cloudMove 50s linear infinite;
+    }
+    @keyframes cloudMove{
+      0%{
+        transform: translateX(0);
+      }
+      50%{
+        transform: translateX(200rpx);
+        opacity: 0;
+      }
+      100%{
+        transform: translateX(750rpx);
+        opacity: 1;
+      }
+    }
+    .headTxt{
+      font-size: 35rpx;
+      color: #fff;
+      font-weight: 600;
+      max-width: 400rpx;
+      margin-top: 45rpx;
+    }
+  }
+  .showheader{
+    transform: translateX(0);
+    transition: .3s;
+  }
+</style>

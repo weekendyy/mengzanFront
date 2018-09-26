@@ -1,0 +1,75 @@
+<template>
+  <view class="tabBox">
+    <block wx:for="{{tabList}}" wx:key="{{index}}">
+      <view class="tanItem {{tabIndex == index ?'actTabitem':''}}" @tap="itemTab({{index}})">{{item}}</view>
+    </block>
+    <view class="moveLineBox" style="width: {{lineW}}rpx;left:{{tabIndex*lineW}}rpx">
+      <view class="moveLine"></view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class TabItem extends wepy.component {
+    props = {
+      tabList: Array,
+      tabIndex: Number
+    }
+    computed = {
+      lineW(){
+        if(this.tabList.length != 0){
+          return 750/this.tabList.length
+        }
+      }
+    }
+    data = {
+    }
+    components = {
+      
+    }
+    methods = {
+      itemTab(index){
+        this.tabIndex = index
+        this.$apply()
+      }
+    }
+    onLoad(){
+    }
+  }
+</script>
+<style lang="less">
+  .tabBox{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 90rpx;
+    background-color: #fff;
+    position: relative;
+    .tanItem{
+      flex: 1;
+      height: 100rpx;
+      text-align: center;
+      line-height: 100rpx;
+      color: #999;
+      font-size: 28rpx;
+    }
+    .actTabitem{
+      color: #0E8275;
+    }
+    .moveLineBox{
+      height: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transition: .3s;
+      .moveLine{
+        width: 60rpx;
+        height: 1px;
+        background-color: #0E8275;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,366 @@
+<template>
+  <view class="indexBox">
+    <view class="homeHead {{showContent?'showhomeHead':''}}">
+      <open-data type="userAvatarUrl" class="userPic {{showContent?'showUserPic':''}}"></open-data>
+      <view class="sayHiTxt ellip-1">
+        {{sayHi}}，<open-data type="userNickName"></open-data>
+      </view>
+    </view>
+    <Banner :bannerImgs.sync="bannerImgs" :isShow.sync="showContent" :bannerIndex.sync="bannerIndex"></Banner>
+    <image src="../../components/images/cloud3.png" mode="widthFix" class="cloudIcon icon1"></image>
+    <image src="../../components/images/cloud1.png" mode="widthFix" class="cloudIcon icon2"></image>
+    <image src="../../components/images/cloud3.png" mode="widthFix" class="cloudIcon icon3"></image>
+    <image src="../../components/images/cloud1.png" mode="widthFix" class="cloudIcon icon4"></image>
+    <image src="../../components/images/cloud3.png" mode="widthFix" class="cloudIcon icon5"></image>
+    <image src="../../components/images/cloud1.png" mode="widthFix" class="cloudIcon icon6"></image>
+    <!-- <image src="./images/qaweweasdas.png" mode="widthFix" class="moreModel {{showContent?'showmoreModel':''}}"></image> -->
+    <view class="goodsList pre-initShow {{showContent?'initShow-1':''}}">
+      <!-- 头部标题 -->
+      <view class="goodsListHead">
+        <view class="headTitle">
+          <view class="cutTitle"></view>
+          <text class="headTitle_txt">精选推荐</text>
+          <text class="headTitle_desc ellip-2">好的东西，没那么贵</text>
+        </view>
+        <view class="seeMore" @tap="seeMoreGoods({{item.id}},{{item.area_name}},{{item.type}})">查看更多</view>
+      </view>
+      <!-- 类型一 -->
+      <view>
+        <form report-submit="true" bindsubmit="toGoodsDetail">
+          <block wx:for="{{3}}" wx:key="{{index}}">
+            <view class="listStyle-one">
+              <image src="http://pdfscxbhd.bkt.clouddn.com/goods567.jpg" mode="aspectFill" class="goodsPic"></image>
+              <view class="bottom-info">
+                <text class="goods-title ellip-2">68元疯抢原价199元海鲜自助单人劵</text>
+                <view class="goods-time-amount">
+                  <text>活动时间：09.02-10.20</text>
+                  <text>已售：200份</text>
+                </view>
+                <view class="goods-priceAnd">
+                  <view class="goods-price">
+                    <text class="price-now" >¥20</text>
+                    <text class="price-pre" >¥50</text>
+                  </view>
+                  <view class="buyBtn">立即抢购</view>
+                </view>
+              </view>
+              <button class="formIdBtn" form-type="submit" data-type="{{item.goods_type}}" data-id="{{item.id}}"></button>
+            </view>
+          </block>
+        </form>
+      </view>
+    </view>
+  </view>
+  <Loading :load.sync="showContent"></Loading>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Banner from '../../components/banner'
+  import Loading from '../../components/loading'
+  import api from '../../utils/commonMT.js'
+  export default class Index extends wepy.page {
+    config = {
+      backgroundColorTop: '#2B9F94'
+    }
+    components = {
+      Banner: Banner,
+      Loading: Loading
+    }
+
+    data = {
+      showContent: false,
+      bannerImgs: ['http://pdfscxbhd.bkt.clouddn.com/edrfqqq.jpg','http://pdfscxbhd.bkt.clouddn.com/weasderf.jpg','http://pdfscxbhd.bkt.clouddn.com/ede.jpg'],
+      bannerIndex: 0,
+      sayHi: ''
+    }
+
+    computed = {
+      
+    }
+
+    methods = {
+      toGoodsDetail(e){
+        api.navTo('../../bargain/index')
+      }
+    }
+
+    events = {
+      
+    }
+    onLoad() {
+      setTimeout(()=>{
+        this.showContent = true
+        this.$apply()
+      },500)
+      this._setHellowWord()
+      api.loadPriceFont()
+    }
+    _setHellowWord(){
+      let hourNow = new Date().getHours()
+      if(hourNow>=0 && hourNow<11){
+        this.sayHi = '早上好'
+      }
+      if(hourNow>=11 && hourNow<18){
+        this.sayHi = '下午好'
+      }
+      if(hourNow>=18 && hourNow<=23){
+        this.sayHi = '晚上好'
+      }
+      this.$apply()
+    }
+    onPullDownRefresh(){
+      
+    }
+    onShow(){
+    }
+    onShareAppMessage(){
+      
+    }
+  }
+</script>
+<style lang="less">
+  Page{
+  }
+  .indexBox{
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    .homeHead{
+      width: 100%;
+      height: 90rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 35rpx;
+      color: #fff;
+      position: fixed;
+      background-color: #35A499;
+      font-weight: 600;
+      top: 0rpx;
+      left: 0;
+      z-index: 10;
+      opacity: 0;
+      padding-top: 30rpx;
+      transition: .6s .4s;
+      transform: translateY(20rpx);
+      box-shadow: 0 0 20rpx rgba(0,0,0,.3);
+      .sayHiTxt{
+        max-width: 500rpx;
+      }
+      .userPic{
+        width: 60rpx;
+        height: 60rpx;
+        border-radius: 100%;
+        position: absolute;
+        top: 50rpx;
+        left: 30rpx;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateX(-30rpx);
+        transition: .5s .5s;
+      }
+      .showUserPic{
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    .showhomeHead{
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .moreModel{
+      width: 700rpx;
+      height: 700rpx;
+      margin-top: 80rpx;
+      margin-left: 25rpx;
+      opacity: 0;
+      transition: .5s;
+      transform: scale(0.9);
+    }
+    .showmoreModel{
+      opacity: 1;
+      transform: scale(1);
+    }
+    .cloudIcon{
+      width: 70rpx;
+      height: 40rpx;
+      position: absolute;
+    }
+    .icon1{
+      top: 40rpx;
+      left: -60rpx;
+      animation: cloudMove 50s linear 30s infinite;
+    }
+    .icon2{
+      top: 80rpx;
+      left: -60rpx;
+      width: 90rpx;
+      animation: cloudMove 100s linear 2s infinite;
+    }
+    .icon3{
+      top: 100rpx;
+      left: -60rpx;
+      width: 50rpx;
+      animation: cloudMove 30s linear 20s infinite;
+    }
+    .icon4{
+      top: 220rpx;
+      left: -60rpx;
+      width: 150rpx;
+      animation: cloudMove 90s linear 0s infinite;
+    }
+    .icon5{
+      top: 190rpx;
+      left: -60rpx;
+      width: 60rpx;
+      animation: cloudMove 90s linear 35s infinite;
+    }
+    .icon6{
+      top: 200rpx;
+      left: -60rpx;
+      width: 30rpx;
+      animation: cloudMove 150s linear 15s infinite;
+    }
+    @keyframes cloudMove{
+      0%{
+        transform: translateX(0);
+      }
+      50%{
+        transform: translateX(500rpx);
+        opacity: 0;
+      }
+      100%{
+        transform: translateX(1000rpx);
+        opacity: 1;
+      }
+    }
+    .goodsList{
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0 20rpx;
+      margin-top: 40rpx;
+      .goodsListHead{
+        width: 100%;
+        height: 140rpx;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20rpx;
+        .headTitle{
+          flex: 1;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          .headTitle_txt{
+            font-size: 42rpx;
+            color: #0A0B0A;
+            font-weight: 600;
+          }
+          .headTitle_desc{
+            font-size: 24rpx;
+            color: #999DA2;
+            margin-top: 17rpx;
+            width: 100%;
+            line-height: 30rpx;
+          }
+        }
+        .pageNum{
+          display: flex;
+          align-items: baseline;
+          font-size: 26rpx;
+          color: #ADADAD;
+          .pageNumTxt{
+            color: #0A0B0A;
+            font-size: 47rpx;
+            font-weight: 600;
+          }
+        }
+        .seeMore{
+          font-size: 28rpx;
+          color: #074739;
+          margin-left: 60rpx;
+          opacity: 0;
+        }
+      }
+      .listStyle-one{
+        width: 710rpx;
+        overflow: hidden;
+        position: relative;
+        border-bottom: 1px solid #F2F2F2;
+        margin-bottom: 50rpx;
+        box-shadow: -0 0 50rpx rgba(0,0,0,.1);
+        border-radius: 10rpx;
+        overflow: hidden;
+        .goodsPic{
+          width: 100%;
+          height: 440rpx;
+        }
+        .goodsLogo{
+          width: 100rpx;
+          height: 10rpx;
+          position: absolute;
+          top: 30rpx;
+          right: 20rpx;
+        }
+        .bottom-info{
+          width: 100%;
+          box-sizing: border-box;
+          padding: 20rpx 30rpx;
+          overflow: hidden;
+          .goods-title{
+            color: #000;
+            font-size: 34rpx;
+            font-weight: 600;
+            width: 100%;
+            line-height: 44rpx;
+          }
+          .goods-time-amount{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin: 20rpx 0;
+            text{
+              font-size: 25rpx;
+              color: #AFAFAF;
+            }
+          }
+          .goods-priceAnd{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .goods-price{
+              display: flex;
+              align-items: baseline;
+              .price-now{
+                font-family: 'priceFont';
+                font-size: 38rpx;
+                color: #2B9F94;
+                font-weight: 600;
+              }
+              .price-pre{
+                font-family: 'priceFont';
+                color: #999;
+                margin-left: 20rpx;
+                font-size: 23rpx;
+                text-decoration: line-through;
+              }
+            }
+            .buyBtn{
+              width: 140rpx;
+              height: 50rpx;
+              background-color: #2B9F94;
+              border-radius: 7rpx;
+              text-align: center;
+              line-height: 50rpx;
+              color: #fff;
+              font-size: 24rpx;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>

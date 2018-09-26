@@ -1,0 +1,47 @@
+<template>
+  <view class="indexBox">
+    <Header :headTxt.sync="headTxt"></Header>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Header from '../../components/header'
+  export default class Index extends wepy.page {
+    config = {
+    }
+    components = {
+      Header: Header
+    }
+
+    data = {
+      showContent: false,
+      headTxt: '人气排行'
+    }
+
+    computed = {
+      
+    }
+
+    methods = {
+      
+    }
+
+    events = {
+      
+    }
+    onLoad() {
+     
+    }
+    onPullDownRefresh(){
+      
+    }
+    onShow(){
+    }
+    onShareAppMessage(){
+      
+    }
+  }
+</script>
+<style lang="less">
+</style>

@@ -1,0 +1,80 @@
+<template>
+  <Header :headTxt.sync="headTxt" type='inner'></Header>
+  <TabBox :tabList.sync="tabList" :tabIndex.sync="tabIndex"></TabBox>
+  <view class="noneBox">
+    <image src="../../images/nonegoods.png" mode="widthFix" class="noneGoods"></image>
+    <text>暂无订单</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Header from '../../components/header'
+  import TabBox from '../../components/tabItem'
+  import myModel from './myModel.js'
+  export default class Index extends wepy.page {
+    config = {
+    }
+    components = {
+      Header: Header,
+      TabBox: TabBox
+    }
+
+    data = {
+      showContent: false,
+      headTxt: '订单中心',
+      tabList: ['待付款','待发货','待收货','全部'],
+      tabIndex: 0
+    }
+
+    computed = {
+      
+    }
+
+    methods = {
+      
+    }
+
+    events = {
+      
+    }
+    onLoad(e) {
+      this.tabIndex = e.index
+      setTimeout(()=>{
+        this.showContent = true
+        this.$apply()
+      },500)
+    }
+    onPullDownRefresh(){
+      
+    }
+    onShow(){
+    }
+    onShareAppMessage(){
+      
+    }
+  }
+</script>
+<style lang="less">
+  Page{
+    background-color: #EEEEEE;
+    .noneBox{
+      width: 100%;
+      height: 600rpx;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 100rpx;
+      color: #999;
+      font-size: 30rpx;
+      .noneGoods{
+        width: 300rpx;
+        height: 600rpx;
+      }
+      text{
+        margin-top: 40rpx;
+      }
+    }
+  }
+</style>

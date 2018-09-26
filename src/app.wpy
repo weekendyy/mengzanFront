@@ -1,0 +1,136 @@
+<style lang="less">
+  page{
+    height: 100%;
+  }
+  text{
+    line-height:1.1em;
+    font-family: 'PingFang SC';
+    color: #565F66;
+  }
+  image{
+    vertical-align: top;
+  }
+  .pre-initShow{
+    opacity: 0;
+    transform: translateX(30rpx) scale(1);
+  }
+  .initShow-1{
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    transition: .3s;
+  }
+  .initShow-2{
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    transition: .3s .1s;
+  }
+  .initShow-3{
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    transition: .3s .2s;
+  }
+  .ellip-2{
+    overflow:hidden;
+    text-overflow: ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    white-space: normal;
+  }
+  .ellip-3{
+    overflow:hidden;
+    text-overflow: ellipsis;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    white-space: normal;
+  }
+  .ellip-1{
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .formIdBtn{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    &::after{
+      content:none;
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy'
+import TokenModel from './utils/token'
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/Index/index',
+      'pages/Shop/index',
+      'pages/My/index',
+      'pages/My/orderIndex'
+    ],
+    window: {
+      navigationStyle: 'custom',
+      backgroundColorTop: '#2B9F94'
+    },
+    tabBar: {
+      'borderStyle': 'black',
+      'list': [
+        {
+          'pagePath': 'pages/Index/index',
+          'iconPath': 'images/home.png',
+          'selectedIconPath': 'images/homeAct.png',
+          'text': '首页'
+        },
+        // {
+        //   'pagePath': 'pages/Shop/index',
+        //   'iconPath': 'images/niceShop.png',
+        //   'selectedIconPath': 'images/niceShopAct.png',
+        //   'text': '发现'
+        // },
+        {
+          'pagePath': 'pages/My/index',
+          'iconPath': 'images/my.png',
+          'selectedIconPath': 'images/myAct.png',
+          'text': '我的'
+        }
+      ],
+      'color': '#858585',
+      'selectedColor': '#48C6A9',
+      'backgroundColor': '#ffffff'
+    },
+    subPackages: [
+      {
+        "root": "bargain",  //砍价
+        "pages": [
+          "index"
+        ]
+      }
+    ]
+  }
+
+  globalData = {
+    timer: ''
+  }
+
+  constructor () {
+    super()
+  }
+  onLaunch() {
+    TokenModel.verify()
+    const res = wx.getSystemInfoSync()
+    this.globalData.phoneWidth = res.windowWidth
+    this.globalData.phoneHeight = res.windowHeight
+    this.globalData.pxRadio = this.globalData.phoneWidth/750
+  }
+
+}
+</script>

@@ -1,0 +1,437 @@
+<template>
+  <view class="indexBox">
+    <Header :headTxt.sync="headTxt" type="inner"></Header>
+    <!-- 轮播图 -->
+    <swiper indicator-dots="true" class="bannerBox pre-initShow {{showContent?'initShow-1':''}}" circular="true" indicator-color="#fff" indicator-active-color="#1A8B7E"
+      autoplay="{{false}}" interval="{{5000}}" duration="{{500}}">
+      <block wx:for="{{goodsPics}}" wx:key="{{index}}">
+        <swiper-item>
+          <image src="{{item}}" class="slide-image" mode="aspectFill" />
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="barginInfo pre-initShow {{showContent?'initShow-2':''}}">
+      <!-- 标题 -->
+      <text class="barginTitle">芝根芝底 | 超值披萨套餐 建议2人使用</text>
+      <!-- 砍价提醒 -->
+      <swiper indicator-dots="{{false}}" class="league-swiper" circular
+      autoplay="{{true}}" interval="{{3000}}" vertical="{{true}}">
+        <block wx:for="{{5}}" wx:key="{{index}}">
+          <swiper-item>
+            <view class="bargainTips">
+              <text class="bargainTips-name">蔡伟乾</text>
+              <text class="bargainTips-txt">于2018.09.02 10:20砍到底价</text>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+      <!-- 活动倒计时 -->
+      <view class="starttime">
+        <view class="starttimetxt">活动开始倒计时</view>
+        <view class="timenumber">
+          <text>{{clock.day}}</text>天<text>{{clock.hour}}</text>时<text>{{clock.min}}</text>分<text>{{clock.second}}</text>秒
+        </view>
+      </view>
+    </view>
+    <!-- 砍价进度 -->
+    <view class="Progress pre-initShow {{showContent?'initShow-3':''}}">
+      <view class="priceNowBox">
+        <text class="priceD">当前价:</text>
+        <text class="priceNow">¥59</text>
+      </view>
+      <view class="priceBox">
+        <view class="pricePre">
+          <text class="priceD">原价:</text>
+          <text class="priceTxt"><text class="priceT">¥</text>199</text>
+        </view>
+        <view class="pricePre">
+          <text class="priceD">底价:</text>
+          <text class="priceTxt"><text class="priceT">¥</text>99</text>
+        </view>
+      </view>
+      <view class="progressState">
+        <view class="hasBargin">
+          <text class="barginTxt">已砍<text class="barginNum">52</text>元，</text>
+        </view>
+        <view class="hasBargin">
+          <text class="barginTxt">还差<text class="barginNum">52</text>元</text>
+        </view>
+      </view>
+      <view class="progressBar">
+        <view class="progressing">
+        </view>
+      </view>
+      <button open-type="share" class="shareBtn">喊好友来砍一刀</button>
+    </view>
+    <view class="tabouterBox">
+      <TabItem :tabList.sync="tabList" :tabIndex.sync="tabIndex"></TabItem>
+    </view>
+    <!-- 底部 -->
+    <view class="bottomTab {{showContent?'showbottomTab':''}}">
+      <view class="bottomTabItem" @tap="toHome">更多砍价</view>
+      <view class="bottomTabItem">立即参与</view>
+    </view>
+    <view style="height: 1000rpx"></view>
+  </view>
+  <Loading :load.sync="showContent"></Loading>
+</template>
+
+<script>
+  let timer = null
+  import wepy from 'wepy'
+  import Header from '../components/header'
+  import Loading from '../components/loading'
+  import TabItem from '../components/tabItem'
+  import api from '../utils/commonMT.js'
+  export default class Index extends wepy.page {
+    config = {
+    }
+    components = {
+      Header: Header,
+      Loading: Loading,
+      TabItem: TabItem
+    }
+
+    data = {
+      showContent: false,
+      tabIndex: 0,
+      headTxt: '砍价',
+      clock: '',
+      goodsPics: ['http://pdfscxbhd.bkt.clouddn.com/goods567.jpg','http://pdfscxbhd.bkt.clouddn.com/goods567.jpg','http://pdfscxbhd.bkt.clouddn.com/goods567.jpg'],
+      tabList: ['帮砍名单','所有砍价']
+    }
+
+    computed = {
+      
+    }
+
+    methods = {
+      toHome(){
+        api.navTo('/pages/Index/index')
+      }
+    }
+
+    events = {
+      
+    }
+    onLoad() {
+      clearInterval(timer)
+      setTimeout(()=>{
+        this.showContent = true
+        this.$apply()
+      },500)
+      this.countDownTime(413216000,(res)=>{
+        this.clock = res
+        this.$apply()
+        console.log(timer)
+        clearInterval(timer)
+      })
+      api.loadPriceFont()
+    }
+    onPullDownRefresh(){
+      
+    }
+    // 倒计时
+    countDownTime(time,scallback){
+      timer = setInterval(()=> {
+        time -= 1000;
+        scallback && scallback(api._dateformat(time))
+        this.countDownTime(time,scallback)
+      }, 1000)
+    }
+    onShow(){
+    }
+    onHide(){
+      clearInterval(timer)
+    }
+    onUnload(){
+      clearInterval(timer)
+    }
+    onShareAppMessage(){
+      
+    }
+  }
+</script>
+<style lang="less">
+  Page{
+    background-color: #FAFAFA;
+  }
+  .indexBox{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .bannerBox{
+      width: 100%;
+      height: 750rpx;
+      background-color: #fff;
+      image{
+        width: 100%;
+        height: 100%;
+        background-color: #999;
+      }
+      .wx-swiper-dots.wx-swiper-dots-horizontal{
+           margin-bottom: 2rpx;
+      }
+      .wx-swiper-dot{
+          width:35rpx;
+          display: inline-flex;
+          height: 7rpx;
+          justify-content:space-between;
+          border-radius: 5rpx
+      }
+      .wx-swiper-dot::before{
+          content: '';
+          flex-grow: 1; 
+          background: rgba(255,255,255,0.8);
+      }
+      .wx-swiper-dot-active::before{
+          background:#48C6A9;
+      }
+    }
+    .barginInfo{
+      margin-top: 40rpx;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .barginTitle{
+        width:600rpx;
+        text-align:center;
+        font-size:35rpx;
+        line-height:55rpx;
+        color:#353535;
+        font-weight:600;
+        display: block;
+      }
+      .league-swiper{
+        flex: 1;
+        padding: 0 20rpx;
+        border-radius: 30rpx;
+        line-height: 50rpx;
+        max-width: 500rpx;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 25rpx;
+        width: 500rpx;
+        height: 50rpx;
+        margin-top: 40rpx;
+        display: flex;
+        background-color: #4BAFA5;
+        box-shadow: 0 25rpx 10rpx -20rpx rgba(14,130,117,.9);
+        .bargainTips{
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          align-items: center;
+          height: 100%;
+          .bargainTips-name{
+            color: #fff;
+          }
+          .bargainTips-txt{ 
+            color: #fff;
+          }
+        }
+      }
+      .starttime{
+        display: flex;
+        align-items: center;
+        font-size: 30rpx;
+        margin-top: 50rpx;
+        .starttimetxt{
+          color: rgb(70,70,69);
+        }
+        .timenumber{
+          display: flex;
+          align-items: center;
+          text{
+            background-color: #4C4C4C;
+            width: 53rpx;
+            height: 55rpx;
+            color: #fff;
+            text-align: center;
+            box-sizing: border-box;
+            line-height: 55rpx;
+            border-radius: 7rpx;
+            box-shadow: 0 3rpx 5rpx rgba(84,132,37,1);
+            margin: 0 12rpx;
+            font-size: 24rpx; 
+          }
+        }
+      }
+    }
+    .Progress{
+      width: 690rpx;
+      height: 450rpx;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      margin-top: 70rpx;
+      background-color: rgba(75,175,165,.1);
+      border-radius: 20rpx;
+      position: relative;
+      .priceNowBox{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 150rpx;
+        height: 150rpx;
+        top: -35rpx;
+        left: 270rpx;
+        border-radius: 80rpx;
+        background-color: #fff;
+        box-shadow: 0 0 20rpx rgba(75,175,165,.7);
+        .priceD{
+          color: #4c4c4c;
+          font-size: 21rpx;
+        }
+        .priceNow{
+          font-size: 40rpx;
+          color: #1E8D81;
+          margin-top: 10rpx;
+          font-weight: 600;
+          font-family: 'priceFont';
+        }
+      }
+      .priceBox{
+        width: 610rpx;
+        height: 100rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 10rpx;
+        background-color: rgba(75,175,165,.2);
+        margin: 40rpx 0 20rpx;
+        box-sizing: border-box;
+        padding: 20rpx 30rpx 0;
+        .pricePre{
+          display: flex;
+          align-items: baseline;
+          .priceD{
+            font-size: 23rpx;
+            color: #4C4C4C;
+            margin-right: 10rpx;
+          }
+          .priceTxt{
+            font-size: 38rpx;
+            color: #FF5508;
+            font-weight: 600;
+            font-family: 'priceFont';
+            .priceT{
+              font-size: 23rpx;
+              margin-right: 5rpx;
+              color: #FF5508;
+            }
+          }
+        }
+      }
+      .progressState{
+        width: 610rpx;
+        display: flex;
+        justify-content: center;
+        align-items: baseline;
+        margin: 30rpx 0;
+        .hasBargin{
+          display: flex;
+          align-items: baseline;
+          .barginTxt{
+            color: #4C4C4C;
+            font-size: 24rpx;
+          }
+          .barginNum{
+            color: #FF5508;
+            font-size: 40rpx;
+            font-weight: 600;
+            margin: 0 8rpx;
+            font-family: 'priceFont'
+          }
+        }
+      }
+      .progressBar{
+        width: 580rpx;
+        height: 35rpx;
+        border-radius: 40rpx;
+        border: 4px solid #8ACAC4;
+        background: #fff;
+        box-shadow: 0 30rpx 20rpx -25rpx rgba(0,0,0,.4);
+        position: relative;
+        .progressing{
+          width: 30%;
+          height: 100%;
+          border-radius: 40rpx;
+          background: linear-gradient(to right,#C9E5E5, #C9E5E5);
+          position: relative;
+          text{
+            color: #fff;
+            font-size: 25rpx;
+            position: absolute;
+            text-align: right;
+            right: 20rpx;
+            top: 13rpx;
+          }
+        }
+      }
+      .shareBtn{
+        padding: 0;
+        margin: 0;
+        width: 400rpx;
+        height: 80rpx;
+        color: #fff;
+        font-size: 30rpx;
+        border-radius: 50rpx;
+        background: #EDCB2C;
+        text-align: center;
+        line-height: 80rpx;
+        margin-top: 35rpx;
+        border: 2px solid #fff;
+        box-shadow: 0 30rpx 30rpx -25rpx rgba(0,0,0,.5);
+        /*animation: shareMove 1s linear infinite alternate;*/
+        &::after{
+          content: none;
+        }
+      }
+      @keyframes shareMove{
+        from{
+          transform: scale(1);
+          box-shadow: 0 30rpx 30rpx -25rpx rgba(0,0,0,.5);
+        }
+        to{
+          transform: scale(0.99);
+          box-shadow: 0 30rpx 30rpx -25rpx rgba(0,0,0,0);
+        }
+      }
+    }
+    .tabouterBox{
+      width: 100%;
+      margin-top: 30rpx;
+    }
+    .bottomTab{
+      width: 100%;
+      height: 100rpx;
+      position: fixed;
+      bottom: -100rpx;
+      left: 0;
+      border-top:1px solid #E8E7E5;
+      display: flex;
+      justify-content: space-around;
+      align-items: center; 
+      background-color: #fff;
+      .bottomTabItem{
+        width: 300rpx;
+        height: 65rpx;
+        background-color: #4BAFA5;
+        border-radius: 8rpx;
+        color: #fff;
+        text-align: center;
+        line-height: 65rpx;
+        font-size: 33rpx;
+      }
+    }
+    .showbottomTab{
+      transition: .4s .2s;
+      transform: translateY(-100rpx);
+    }
+  }
+</style>
